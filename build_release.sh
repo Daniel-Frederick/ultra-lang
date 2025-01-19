@@ -21,7 +21,7 @@ cmake --build .
 # Optionally, run the executable
 echo
 echo "**** Running the Release executable ****"
-./ultra ./src/test.ultra
+./ultra ../../test.ultra
 
 # Return to the original directory
 cd "$CURRENT_DIR"
