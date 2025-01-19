@@ -2,6 +2,8 @@
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -65,6 +67,39 @@ std::vector<Token> tokenize(const std::string &str) {
   return tokens;
 }
 
+std::string tokens_to_asm(const std::vector<Token> &tokens) {
+  std::stringstream output;
+  output << "global _start\n_start:\n";
+
+  for (size_t i = 0; i < tokens.size(); ++i) {
+    const Token &token = tokens.at(i);
+
+    // Handle `_return` token
+    if (token.type == TokenType::_return) {
+      // Check if next tokens exist and match the pattern: int_lit -> semi
+      if (i + 1 < tokens.size() &&
+          tokens.at(i + 1).type == TokenType::int_lit) {
+        if (i + 2 < tokens.size() && tokens.at(i + 2).type == TokenType::semi) {
+          // Generate assembly for return
+          output << "    mov rax, 60\n"; // syscall number for exit
+          output << "    mov rdi, " << tokens.at(i + 1).value.value()
+                 << "\n"; // exit code
+          output << "    syscall\n";
+          i += 2; // Skip the processed tokens
+        } else {
+          throw std::runtime_error(
+              "Error: Missing semicolon after `return` statement.");
+        }
+      } else {
+        throw std::runtime_error(
+            "Error: Missing integer literal after `return` statement.");
+      }
+    }
+  }
+
+  return output.str();
+}
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "Incorrect Usage. Should be:" << std::endl;
@@ -80,8 +115,26 @@ int main(int argc, char *argv[]) {
   contents.assign((std::istreambuf_iterator<char>(input)),
                   std::istreambuf_iterator<char>());
 
-  // Tokenize Text
-  std::cout << contents;
-  tokenize(contents);
+  // std::cout << "File input, test.ultra: " << contents << std::endl;
+
+  // Tokenize source Text
+  std::vector<Token> tokens = tokenize(contents);
+
+  // std::cout << tokens_to_asm(tokens) << std::endl;
+
+  // convert Tokens to assembly
+  {
+    std::fstream file("out.asm", std::ios::out);
+    if (!file) {
+      std::cerr << "Error: unable to create .asm file" << std::endl;
+      return EXIT_FAILURE;
+    }
+    file << tokens_to_asm(tokens);
+  }
+
+  // assemble the file and create executable
+  system("nasm -felf64 out.asm");
+  system("ld -o out out.o");
+
   return EXIT_SUCCESS;
 }
