@@ -1,11 +1,11 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 #include "../include/tokenizer.hpp"
 
-/*
 // Lexical Analysis
 std::string tokens_to_asm(const std::vector<Token> &tokens) {
   std::stringstream output;
@@ -39,7 +39,7 @@ std::string tokens_to_asm(const std::vector<Token> &tokens) {
 
   return output.str();
 }
-*/
+
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     std::cerr << "Incorrect Usage. Should be:" << std::endl;
@@ -58,7 +58,8 @@ int main(int argc, char *argv[]) {
   // std::cout << "File input, test.ultra: " << contents << std::endl;
 
   // Tokenize source Text
-  std::vector<Token> tokens = tokenize(contents);
+  Tokenizer_NS::Tokenizer tokenizer(std::move(contents));
+  std::vector<Token> tokens = tokenizer.tokenize();
 
   // std::cout << tokens_to_asm(tokens) << std::endl;
 

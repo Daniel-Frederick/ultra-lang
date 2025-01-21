@@ -18,6 +18,10 @@ public:
   std::vector<Token> tokenize();
 
 private:
+  [[nodiscard]] std::optional<char> peak(int ahead = 1) const;
+  char consume();
+
+  int m_index = 0;
   const std::string m_src;
 };
 } // namespace Tokenizer_NS

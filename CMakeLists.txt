@@ -1,7 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
-
 project(ultra)
 
-set(CMAKE_CXX_STANDARD 20)
+set(SOURCES 
+  src/main.cpp
+  src/tokenizer.cpp
+)
 
-add_executable(ultra src/main.cpp)
+set(HEADERS
+  include/tokenizer.hpp
+)
+
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
