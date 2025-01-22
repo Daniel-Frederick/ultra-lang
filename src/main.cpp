@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 
+#include "../include/parser.hpp"
 #include "../include/tokenizer.hpp"
 
 // Lexical Analysis

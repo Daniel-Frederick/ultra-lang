@@ -1,6 +1,5 @@
 #include "../include/tokenizer.hpp"
 #include <cstdlib>
-#include <iostream>
 
 namespace Tokenizer_NS {
 Tokenizer::Tokenizer(const std::string &src) : m_src(src) {}
