@@ -13,8 +13,11 @@ std::optional<Node::Expression> Parser::parse_expr() {
 
 std::optional<Node::Exit> Parser::parse() {
   std::optional<Node::Exit> exit_node;
+
   while (peak().has_value()) {
-    if (peak().value().type == TokenType::exit) {
+    auto token = peak().value();
+
+    if (token.type == TokenType::exit) {
       consume();
       if (auto node_expr = parse_expr()) {
         exit_node = Node::Exit{.expr = node_expr.value()};
@@ -22,12 +25,14 @@ std::optional<Node::Exit> Parser::parse() {
         std::cerr << "Invalid expression" << std::endl;
         exit(EXIT_FAILURE);
       }
-      if (!peak().has_value() || peak().value().type != TokenType::semi) {
-        std::cerr << "Invalid expression" << std::endl;
-        exit(EXIT_FAILURE);
+      if (peak().has_value() && peak().value().type == TokenType::semi) {
+        consume();
       }
+    } else {
+      consume();
     }
   }
+
   m_index = 0;
   return exit_node;
 }
