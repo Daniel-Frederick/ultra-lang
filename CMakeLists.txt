@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 project(ultra)
 
+set(CMAKE_BUILD_TYPE Debug)
+
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+
 set(HEADERS
   include/tokenizer.hpp
   include/parser.hpp

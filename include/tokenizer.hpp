@@ -19,7 +19,7 @@ public:
   std::vector<Token> tokenize();
 
 private:
-  [[nodiscard]] std::optional<char> peak(int ahead = 1) const;
+  [[nodiscard]] std::optional<char> peek(int ahead = 1) const;
   char consume();
 
   size_t m_index = 0;

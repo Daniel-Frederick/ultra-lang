@@ -8,10 +8,10 @@ std::vector<Token> Tokenizer::tokenize() {
   std::vector<Token> tokens;
   std::string buf;
 
-  while (auto c = peak(0)) {
+  while (auto c = peek(0)) {
     if (std::isalpha(*c)) {
       buf.push_back(consume());
-      while (auto next = peak(0)) {
+      while (auto next = peek(0)) {
         if (!std::isalnum(*next))
           break;
         buf.push_back(consume());
@@ -26,7 +26,7 @@ std::vector<Token> Tokenizer::tokenize() {
       buf.clear();
     } else if (std::isdigit(*c)) {
       buf.push_back(consume());
-      while (auto next = peak(0)) {
+      while (auto next = peek(0)) {
         if (!std::isdigit(*next))
           break;
         buf.push_back(consume());
@@ -47,7 +47,7 @@ std::vector<Token> Tokenizer::tokenize() {
   return tokens;
 }
 
-std::optional<char> Tokenizer::peak(int ahead) const {
+std::optional<char> Tokenizer::peek(int ahead) const {
   if (m_index + ahead >= m_src.length())
     return std::nullopt;
   return m_src.at(m_index + ahead);
