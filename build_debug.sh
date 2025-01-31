@@ -23,5 +23,9 @@ echo
 echo "**** Running the Debug executable ****"
 ./ultra ../../test.ultra
 
+echo "**** Print Exit Status ****"
+./out
+echo $?
+
 # Return to the original directory
 cd "$CURRENT_DIR"

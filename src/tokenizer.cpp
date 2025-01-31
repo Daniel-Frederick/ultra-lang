@@ -33,6 +33,12 @@ std::vector<Token> Tokenizer::tokenize() {
       }
       tokens.push_back({TokenType::int_lit, buf});
       buf.clear();
+    } else if (peek().value() == '(') {
+      consume();
+      tokens.push_back({.type = TokenType::open_param});
+    } else if (peek().value() == ')') {
+      consume();
+      tokens.push_back({.type = TokenType::close_param});
     } else if (*c == ';') {
       consume();
       tokens.push_back({TokenType::semi});
@@ -47,10 +53,10 @@ std::vector<Token> Tokenizer::tokenize() {
   return tokens;
 }
 
-std::optional<char> Tokenizer::peek(int ahead) const {
-  if (m_index + ahead >= m_src.length())
+std::optional<char> Tokenizer::peek(int offset) const {
+  if (m_index + offset >= m_src.length())
     return std::nullopt;
-  return m_src.at(m_index + ahead);
+  return m_src.at(m_index + offset);
 }
 
 char Tokenizer::consume() { return m_src.at(m_index++); }

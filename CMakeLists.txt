@@ -3,6 +3,7 @@ project(ultra)
 
 set(CMAKE_BUILD_TYPE Debug)
 
+# For Debugging purposes
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
 
 set(HEADERS

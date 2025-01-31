@@ -1,10 +1,11 @@
 #include "../include/parser.hpp"
+#include <cstdlib>
 
 namespace Parser_NS {
 Parser::Parser(const std::vector<Token> &tokens) : m_tokens(tokens) {}
 
 std::optional<Node::Expression> Parser::parse_expr() {
-  if (peak().has_value() && peak().value().type == TokenType::int_lit) {
+  if (peek().has_value() && peek().value().type == TokenType::int_lit) {
     return Node::Expression{.int_lit = consume()};
   } else {
     return std::nullopt;
@@ -14,22 +15,35 @@ std::optional<Node::Expression> Parser::parse_expr() {
 std::optional<Node::Exit> Parser::parse() {
   std::optional<Node::Exit> exit_node;
 
-  while (peak().has_value()) {
-    auto token = peak().value();
+  while (peek().has_value()) {
+    auto token = peek().value();
 
-    if (token.type == TokenType::exit) {
-      consume();
+    if (token.type == TokenType::exit &&
+        peek(1).value().type == TokenType::open_param) {
+      consume(); // Remove the "exit" token
+      consume(); // Remove the '(' token
       if (auto node_expr = parse_expr()) {
         exit_node = Node::Exit{.expr = node_expr.value()};
       } else {
         std::cerr << "Invalid expression" << std::endl;
         exit(EXIT_FAILURE);
       }
-      if (peak().has_value() && peak().value().type == TokenType::semi) {
+      if (peek().has_value() && peek().value().type == TokenType::close_param) {
         consume();
+      } else {
+        std::cerr << "No Closing Parameter! Expected ')'" << std::endl;
+        exit(EXIT_FAILURE);
+      }
+      if (peek().has_value() && peek().value().type == TokenType::semi) {
+        consume();
+      } else {
+        std::cerr << "No Semicolon! Expected ';'" << std::endl;
+        exit(EXIT_FAILURE);
       }
     } else {
-      consume();
+      // consume(); Are you sure about this?
+      std::cerr << "Expected 'exit' or '('" << std::endl;
+      exit(EXIT_FAILURE);
     }
   }
 
@@ -37,10 +51,10 @@ std::optional<Node::Exit> Parser::parse() {
   return exit_node;
 }
 
-[[nodiscard]] std::optional<Token> Parser::peak(int ahead) const {
-  if (m_index + ahead >= m_tokens.size())
+[[nodiscard]] std::optional<Token> Parser::peek(int offset) const {
+  if (m_index + offset >= m_tokens.size())
     return std::nullopt;
-  return m_tokens.at(m_index + ahead);
+  return m_tokens.at(m_index + offset);
 }
 
 Token Parser::consume() { return m_tokens.at(m_index++); }

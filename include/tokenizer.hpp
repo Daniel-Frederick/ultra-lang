@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-enum class TokenType { exit, int_lit, semi };
+enum class TokenType { exit, int_lit, semi, open_param, close_param };
 
 struct Token {
   TokenType type;
@@ -19,7 +19,7 @@ public:
   std::vector<Token> tokenize();
 
 private:
-  [[nodiscard]] std::optional<char> peek(int ahead = 1) const;
+  [[nodiscard]] std::optional<char> peek(int offset = 0) const;
   char consume();
 
   size_t m_index = 0;

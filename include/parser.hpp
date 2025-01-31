@@ -24,7 +24,7 @@ public:
   std::optional<Node::Exit> parse();
 
 private:
-  [[nodiscard]] std::optional<Token> peak(int ahead = 1) const;
+  [[nodiscard]] std::optional<Token> peek(int offset = 0) const;
   Token consume();
 
   size_t m_index = 0;
