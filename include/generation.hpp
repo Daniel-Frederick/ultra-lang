@@ -6,11 +6,11 @@ namespace Generation_NS {
 class Generation {
 public:
   // temp for now
-  Generation(const Node::Exit root);
+  Generation(const Node::Prog root);
 
   [[nodiscard]] std::string generate() const;
 
 private:
-  const Node::Exit m_root;
+  const Node::Prog m_program;
 };
 } // namespace Generation_NS

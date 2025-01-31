@@ -4,7 +4,16 @@
 #include <string>
 #include <vector>
 
-enum class TokenType { exit, int_lit, semi, open_param, close_param };
+enum class TokenType {
+  exit,
+  int_lit,
+  semi,
+  open_param,
+  close_param,
+  ident,
+  let,
+  equals
+};
 
 struct Token {
   TokenType type;

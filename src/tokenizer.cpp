@@ -20,10 +20,15 @@ std::vector<Token> Tokenizer::tokenize() {
       if (buf == "exit") {
         tokens.push_back({TokenType::exit});
       } else {
-        std::cerr << "Misspelled keyword: " << buf << std::endl;
-        exit(EXIT_FAILURE);
+        tokens.push_back({.type = TokenType::ident, .value = buf});
+        buf.clear();
+        continue;
       }
       buf.clear();
+    } else if (buf == "let") {
+      tokens.push_back({.type = TokenType::let});
+      buf.clear();
+      continue;
     } else if (std::isdigit(*c)) {
       buf.push_back(consume());
       while (auto next = peek(0)) {
@@ -39,6 +44,9 @@ std::vector<Token> Tokenizer::tokenize() {
     } else if (peek().value() == ')') {
       consume();
       tokens.push_back({.type = TokenType::close_param});
+    } else if (*c == '=') {
+      consume();
+      tokens.push_back({TokenType::equals});
     } else if (*c == ';') {
       consume();
       tokens.push_back({TokenType::semi});

@@ -2,16 +2,45 @@
 #include "tokenizer.hpp"
 #include <optional>
 #include <string>
+#include <variant>
 #include <vector>
 
-// Tree Node
+// Tree Nodes
 namespace Node {
-struct Expression {
+// Expression Int Litteral
+struct ExprIntLit {
   Token int_lit;
 };
 
-struct Exit {
+// Expression Identifier
+struct ExprIdent {
+  Token ident;
+};
+
+// Expression
+struct Expression {
+  std::variant<Node::ExprIntLit, Node::ExprIdent> variant;
+};
+
+// Statment Exit
+struct StmtExit {
   Node::Expression expr;
+};
+
+// Statement let
+struct StmtLet {
+  Token ident;
+  Node::Expression expr;
+};
+
+// Statment
+struct Stmt {
+  std::variant<Node::StmtExit, StmtLet> variant;
+};
+
+// Program
+struct Prog {
+  std::vector<Node::Stmt> stmts;
 };
 } // namespace Node
 
@@ -21,7 +50,8 @@ public:
   Parser(const std::vector<Token> &tokens);
 
   std::optional<Node::Expression> parse_expr();
-  std::optional<Node::Exit> parse();
+  std::optional<Node::Stmt> parse_stmt();
+  std::optional<Node::Prog> parse_prog();
 
 private:
   [[nodiscard]] std::optional<Token> peek(int offset = 0) const;
