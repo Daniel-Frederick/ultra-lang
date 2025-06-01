@@ -19,7 +19,7 @@ struct ExprIdent {
 
 // Expression
 struct Expression {
-  std::variant<Node::ExprIntLit, Node::ExprIdent> variant;
+  std::variant<ExprIntLit, ExprIdent> variant;
 };
 
 // Statment Exit
@@ -35,12 +35,13 @@ struct StmtLet {
 
 // Statment
 struct Stmt {
-  std::variant<Node::StmtExit, StmtLet> variant;
+  std::variant<StmtExit, StmtLet> variant;
 };
 
 // Program
 struct Prog {
-  std::vector<Node::Stmt> stmts;
+  // A list of statements
+  std::vector<Stmt> stmts;
 };
 } // namespace Node
 

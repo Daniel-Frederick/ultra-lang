@@ -20,13 +20,13 @@ std::vector<Token> Tokenizer::tokenize() {
       if (buf == "exit") {
         tokens.push_back({TokenType::exit});
       } else {
-        tokens.push_back({.type = TokenType::ident, .value = buf});
+        tokens.push_back({TokenType::ident, buf});
         buf.clear();
         continue;
       }
       buf.clear();
     } else if (buf == "let") {
-      tokens.push_back({.type = TokenType::let});
+      tokens.push_back({TokenType::let});
       buf.clear();
       continue;
     } else if (std::isdigit(*c)) {
@@ -40,10 +40,10 @@ std::vector<Token> Tokenizer::tokenize() {
       buf.clear();
     } else if (peek().value() == '(') {
       consume();
-      tokens.push_back({.type = TokenType::open_param});
+      tokens.push_back({TokenType::open_param});
     } else if (peek().value() == ')') {
       consume();
-      tokens.push_back({.type = TokenType::close_param});
+      tokens.push_back({TokenType::close_param});
     } else if (*c == '=') {
       consume();
       tokens.push_back({TokenType::equals});

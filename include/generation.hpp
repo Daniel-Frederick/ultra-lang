@@ -8,7 +8,8 @@ public:
   // temp for now
   Generation(const Node::Prog root);
 
-  [[nodiscard]] std::string generate() const;
+  [[nodiscard]] std::string gen_stmt() const;
+  [[nodiscard]] std::string gen_prog() const;
 
 private:
   const Node::Prog m_program;

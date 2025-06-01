@@ -8,10 +8,10 @@ Parser::Parser(const std::vector<Token> &tokens) : m_tokens(tokens) {}
 std::optional<Node::Expression> Parser::parse_expr() {
   if (peek().has_value() && peek().value().type == TokenType::int_lit) {
     // If Expression is a number
-    return Node::Expression{.variant = Node::ExprIntLit{.int_lit = consume()}};
+    return Node::Expression{Node::ExprIntLit{consume()}};
   } else if (peek().has_value() && peek().value().type == TokenType::ident) {
     // If Expression is a variable identifier
-    return Node::Expression{.variant = Node::ExprIdent{.ident = consume()}};
+    return Node::Expression{Node::ExprIdent{consume()}};
   } else {
     // If there is a syntax error
     return std::nullopt;
@@ -27,7 +27,7 @@ std::optional<Node::Stmt> Parser::parse_stmt() {
     consume(); // Remove the '(' token
     Node::StmtExit stmt_exit;
     if (auto node_expr = parse_expr()) {
-      stmt_exit = Node::StmtExit{.expr = node_expr.value()};
+      stmt_exit = Node::StmtExit{node_expr.value()};
     } else {
       std::cerr << "Invalid expression" << std::endl;
       exit(EXIT_FAILURE);
@@ -44,12 +44,12 @@ std::optional<Node::Stmt> Parser::parse_stmt() {
       std::cerr << "No Semicolon! Expected ';'" << std::endl;
       exit(EXIT_FAILURE);
     }
-    return Node::Stmt{.variant = stmt_exit};
+    return Node::Stmt{stmt_exit};
   } else if (peek().has_value() && peek().value().type == TokenType::let &&
              peek(1).has_value() && peek(1).value().type == TokenType::ident &&
              peek(2).has_value() && peek(2).value().type == TokenType::equals) {
     consume(); // Remove "let" token
-    auto stmt_let = Node::StmtLet{.ident = consume()};
+    auto stmt_let = Node::StmtLet{consume()};
     consume(); // Remove '=' token
     if (auto expr = parse_expr()) {
       stmt_let.expr = expr.value();
@@ -63,7 +63,7 @@ std::optional<Node::Stmt> Parser::parse_stmt() {
       std::cerr << "Expected ';'" << std::endl;
       exit(EXIT_FAILURE);
     }
-    return Node::Stmt{.variant = stmt_let};
+    return Node::Stmt{stmt_let};
   } else {
     std::cerr << "Expected 'exit' or '('" << std::endl;
     exit(EXIT_FAILURE);
