@@ -32,22 +32,22 @@ int main(int argc, char *argv[]) {
   // std::cout << tokens_to_asm(tokens) << std::endl;
 
   Parser_NS::Parser parser(std::move(tokens));
-  std::optional<Node::Exit> tree = parser.parse();
+  std::optional<Node::Prog> program = parser.parse_prog();
 
-  if (!tree.has_value()) {
-    std::cerr << "No exit statment found" << std::endl;
+  if (!program.has_value()) {
+    std::cerr << "Invalid Program" << std::endl;
     exit(EXIT_FAILURE);
   }
 
   // convert Tokens to assembly
-  Generation_NS::Generation generation(tree.value());
+  Generation_NS::Generation generation(program.value());
   {
     std::fstream file("out.asm", std::ios::out);
     if (!file) {
       std::cerr << "Error: unable to create .asm file" << std::endl;
       return EXIT_FAILURE;
     }
-    file << generation.generate();
+    file << generation.gen_prog();
   }
 
   // assemble the file and create executable

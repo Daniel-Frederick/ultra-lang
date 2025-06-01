@@ -80,6 +80,7 @@ std::optional<Node::Prog> Parser::parse_prog() {
       exit(EXIT_FAILURE);
     }
   }
+  return prog;
 }
 
 [[nodiscard]] std::optional<Token> Parser::peek(int offset) const {
